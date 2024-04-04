@@ -20,26 +20,32 @@ class RecipeController extends AbstractController
     #[Route(path: '/recette/{slug}-{id}', name: 'app_recipe_show', requirements : ['id'=> '\d+', 'slug'=> '[a-z0-9-]+'])]
     public function show(Request $request, string $slug, int $id): Response
     {
-    //    dd($request->attributes->get('slug'),$request->attributes->getInt('id') );
-        // dd($slug, $id);
-        //affiche normal
-        // return new Response("Recette numéro " .$id . " : " . $slug);
+        //preuve que ca n'interprete pas le code html
+        // $slug = "<h2>blabla</h2>";
+      /* dd($request->attributes->get('slug'),$request->attributes->getInt('id') );
+        dd($slug, $id);
+        affiche normal
+        return new Response("Recette numéro " .$id . " : " . $slug);
 
-        //affiche en Json version longue en important JsonResponse
-        // return new JsonResponse([
-        //     'id' => $id,
-        //     'slug' => $slug
-        // ]);
+        affiche en Json version longue en important JsonResponse
+        return new JsonResponse([
+            'id' => $id,
+            'slug' => $slug
+        ]);
 
-        //Affiche en Json sans besoin d'import
-        // return $this->Json([
-        //         'id' => $id,
-        //         'slug' => $slug
-        //     ]);
-        // return new Response("Bienvenue dans la page " .$request->query->get('recette', 'des Recettes'));
+        Affiche en Json sans besoin d'import
+        return $this->Json([
+                'id' => $id,
+                'slug' => $slug
+            ]);
+         return new Response("Bienvenue dans la page " .$request->query->get('recette', 'des Recettes')); */
         return $this->render('recipe/show.html.twig', [
             'slug' => $slug,
-            'id' => $id
+            'id' => $id,
+            'user' => [
+                'firstname' => "Julien",
+                'lastname' => "Dunia"
+            ]
         ]); 
     }
 

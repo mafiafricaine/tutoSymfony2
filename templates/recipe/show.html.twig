@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
  
-{% block title "Show" %}
+{% block title %}{{ slug }}{% endblock %}
 
 {% block body %}
-<h3>Bienvenu dans la page SHOW</h3>
+<h3>Bienvenu sur la recette numéro : {{ id }} </h3>
+<h4>Comment faire 1 {{ slug |title }}</h4>
+{# <p>Recette créée par {{ user.firstname }} {{ user.lastname }}</p> #}
+<p>Recette créée par {{ user.firstname ~" "~ user.lastname }}</p>
 {% endblock %}
