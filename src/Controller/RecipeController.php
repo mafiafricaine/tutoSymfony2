@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Recipe;
+use App\Form\RecipeType;
+use DateTimeImmutable;
+use App\Repository\RecipeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,43 +16,115 @@ use Symfony\Component\Routing\Attribute\Route;
 class RecipeController extends AbstractController
 {
     #[Route(path: '/recette', name: 'app_recipe_index')]
-    public function index(Request $request): Response
+    public function index(Request $request, EntityManagerInterface $em): Response
     {
-        return $this->render('recipe/index.html.twig'); 
-    }
+        //permet de recuperer toutes les recettes en BD
+        // $recipes = $repository->findAll();
+
+        $recipes = $em->getRepository(Recipe::class)->findAll();
+        //permet de recuperer toutes les recettes en dessous d'une durée en BD
+        // $recipes = $repository->findRecipeDurationLowerThan(60);
+        // dd($recipes);
+
+        //version classique 
+        // $recipe = new Recipe();
+        // $recipe->setTitle('Sushi Saumon');
+        // $recipe->setSlug('sushi-saumon');
+        // $recipe->setContent('Prenez du riz et du saumon.');
+        // $recipe->setDuration(156);
+        // $recipe->setCreatedAt(new DateTimeImmutable());
+        // $recipe->setUpdatedAt(new DateTimeImmutable());
+        // $em->persist($recipe); 
 
 
-    #[Route(path: '/recette/{slug}-{id}', name: 'app_recipe_show', requirements : ['id'=> '\d+', 'slug'=> '[a-z0-9-]+'])]
-    public function show(Request $request, string $slug, int $id): Response
-    {
-        //preuve que ca n'interprete pas le code html
-        // $slug = "<h2>blabla</h2>";
-      /* dd($request->attributes->get('slug'),$request->attributes->getInt('id') );
-        dd($slug, $id);
-        affiche normal
-        return new Response("Recette numéro " .$id . " : " . $slug);
+        //version avec l'utilisation de fluent setter
+        // $recipe2 = new Recipe();
+        // $recipe2->setTitle('Tajin d\'agneau')
+        //     ->setSlug('tajine-agneau')
+        //     ->setContent('Tu prends un agneau.')
+        //     ->setDuration(95)
+        //     ->setCreatedAt(new DateTimeImmutable())
+        //     ->setUpdatedAt(new DateTimeImmutable());
 
-        affiche en Json version longue en important JsonResponse
-        return new JsonResponse([
-            'id' => $id,
-            'slug' => $slug
-        ]);
+        // $em->persist($recipe2); 
 
-        Affiche en Json sans besoin d'import
-        return $this->Json([
-                'id' => $id,
-                'slug' => $slug
-            ]);
-         return new Response("Bienvenue dans la page " .$request->query->get('recette', 'des Recettes')); */
-        return $this->render('recipe/show.html.twig', [
-            'slug' => $slug,
-            'id' => $id,
-            'user' => [
-                'firstname' => "Julien",
-                'lastname' => "Dunia"
-            ]
+
+        // $recipes[5]->setTitle('Pizza Bolognaise')
+        //     ->setSlug('pizza-bolognaise')
+        //     ->setContent('Suffis de prendre une pate a pizza et de rajouter de la bolognaise');
+
+        // $em->remove($recipes[5]);
+        // $em->flush();
+        return $this->render('recipe/index.html.twig', [
+            'recipes' => $recipes
         ]); 
     }
 
-   
+    #[Route(path: '/recette/{slug}-{id}', name: 'app_recipe_show', requirements : ['id'=> '\d+', 'slug'=> '[a-z0-9-]+'])]
+    public function show(Request $request, string $slug, int $id,RecipeRepository $repository): Response
+    {
+         //ca nous permet de recuperer une recette à partir du slug donné en paramètre
+        // $recipe1 = $repository->findOneBy(['slug' => $slug]);
+        // dd($recipe1);
+        //ca nous recupere une recette correspondant à l'id
+        $recipe = $repository->find($id);
+        if($recipe->getSlug() !== $slug){
+            return $this->redirectToRoute('app_recipe_show', ['id' => $recipe->getId(), 'slug' => $recipe->getSlug()]);
+        }
+        // dd($recipe);
+         return $this->render('recipe/show.html.twig', [
+            'recipe' => $recipe
+        ]); 
+    }
+
+    #[Route(path : '/recette/create', name : 'app_recipe_create')]
+    public function create(Request $request, EntityManagerInterface $em) : Response {
+        $recipe = new Recipe;
+        $form = $this->createForm(RecipeType::class, $recipe);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()){
+            $recipe->setCreatedAt(new DateTimeImmutable());
+            $recipe->setUpdatedAt(new DateTimeImmutable());
+            $em->persist($recipe);
+            $em->flush();
+            $this->addFlash('success', 'La recette '. $recipe->getTitle() .' a bien été créée');
+            return $this->redirectToRoute('app_recipe_index');
+        }
+        return $this->render('recipe/create.html.twig', [
+            'monForm' => $form
+        ]);
+    }
+
+    #[Route(path: '/recette/{id}/edit', name: 'app_recipe_edit')]
+    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em): Response
+    {
+        // dd($recipe);
+        //cette methode prend en premier paramètre le formulaire que l'on souhaite utiliser
+        //en second paramètre elle prend les données 
+        $form = $this->createForm(RecipeType::class, $recipe); 
+        $form->handleRequest($request);  
+        // dd($recipe); 
+        if($form->isSubmitted() && $form->isValid()){
+            $recipe->setUpdatedAt(new DateTimeImmutable());
+            $em->flush();
+            $this->addFlash('success','La recette a bien été modifiée');
+            return $this->redirectToRoute('app_recipe_show', ['id' => $recipe->getId(), 'slug' => $recipe->getSlug()]);
+        }
+        return $this->render('recipe/edit.html.twig', [
+            'recipe' => $recipe,
+            'monForm' => $form
+        ]);
+    }
+
+    
+
+    #[Route(path: '/recette/{id}/delete', name: 'app_recipe_delete', requirements : ['id'=> '\d+'])]
+    public function delete(Recipe $recipe, EntityManagerInterface $em): Response{
+        $titre = $recipe->getTitle();
+        $em->remove($recipe);
+        $em->flush();
+        $this->addFlash('info', 'La recette '. $titre . ' a bien été supprimée');
+        return $this->redirectToRoute('app_recipe_index');
+    }
+  
 }
