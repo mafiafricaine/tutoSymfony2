@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Recipe;
+// use App\Entity\User;
 use App\Form\RecipeType;
 use DateTimeImmutable;
 use App\Repository\RecipeRepository;
@@ -39,12 +40,17 @@ class RecipeController extends AbstractController
 
         //version avec l'utilisation de fluent setter
         // $recipe2 = new Recipe();
-        // $recipe2->setTitle('Tajin d\'agneau')
-        //     ->setSlug('tajine-agneau')
-        //     ->setContent('Tu prends un agneau.')
-        //     ->setDuration(95)
+        // $userRepo = $em->getRepository(User::class);
+        // $user = $userRepo->find(1);
+        // dd($user);
+        // $recipe2->setTitle('Sushi Au Saumon')
+        //     ->setSlug('sushi-au-saumon')
+        //     ->setContent('Tu prends du riz et du saumon.')
+        //     ->setDuration(45)
+        //     ->setImageName('https://th.bing.com/th/id/OIP.YzNBu-r2yymhRgwhGIZ_rgHaJ4?rs=1&pid=ImgDetMain')
         //     ->setCreatedAt(new DateTimeImmutable())
-        //     ->setUpdatedAt(new DateTimeImmutable());
+        //     ->setUpdatedAt(new DateTimeImmutable())
+        //     ->setUser($user);
 
         // $em->persist($recipe2); 
 

@@ -50,8 +50,11 @@ class Recipe
     private ?string $imageName = 
 "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg";
 
-    
+    #[ORM\ManyToOne(inversedBy: 'recipes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -118,6 +121,20 @@ class Recipe
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    
 
     
 }
