@@ -21,8 +21,8 @@ class Recipe
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Votre titre ne peut pas être vide")]
-    #[Assert\Length(min: 5,max: 50, minMessage: "Vous devez avoir un titre de minimum 10 caractères", maxMessage: "Vous ne pouvez pas avoir un titre de plus de 50 caractères")]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 5,max: 50)]
     // #[Assert\Regex(
     //     pattern: '/^(?!.\b(fuck|merde|shite)\b).$/i',
     //     message: 'Bad language is not accepted'
@@ -35,15 +35,15 @@ class Recipe
 
     #[ORM\Column(type: Types::TEXT)]
     #[InappropriateWords(listWords: ["putain","fuck"])]
-    #[Assert\NotBlank(message: "Votre contenu ne peut pas être vide")]
-    #[Assert\Length(min: 20, minMessage: "Vous devez avoir un contenu de minimum 20 caractères")]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 20)]
     private ?string $content = null;
 
     use Timestampable;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\Positive(message: "La durée doit être positif")]
-    #[Assert\LessThan(1440, message: "Vous ne pouvez pas introduire de recette de plus de 24h")]
+    #[Assert\Positive()]
+    #[Assert\LessThan(1440)]
     private ?int $duration = null;
 
     #[ORM\Column(length: 500, nullable: true)]

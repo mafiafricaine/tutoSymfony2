@@ -13,9 +13,9 @@
             <br>
  			<img class="rounded" style="max-width: 400px;" src={{ recipe.imageName}} >
 			<h5>{{ recipe.content | nl2br }}</h5>
-			<p>Submitted {{ recipe.createdAt|date('d/m/Y') }}</p>
-            <p>Updated {{ recipe.updatedAt|date('d/m/Y H:i') }}</p>
-            <p>By {{ recipe.user.firstname ~" "~ recipe.user.lastname }}</p>
+			<p>{{'Submitted' |trans}} {{ recipe.createdAt|date('d/m/Y') }}</p>
+            <p>{{'Updated' |trans}} {{ recipe.updatedAt|date('d/m/Y H:i') }}</p>
+            <p>{{'By'|trans}} {{ recipe.user.firstname ~" "~ recipe.user.lastname }}</p>
 		</article>
         <a class="btn btn-primary btn-sm" href={{ path('app_recipe_edit', {id: recipe.id}) }}>Edit Recipe</a>
         <a class= "btn btn-danger btn-sm" href={{ path('app_recipe_delete', {id: recipe.id}) }} onclick="return confirm('Are you sure you want to delete this recipe?')">Delete</a>

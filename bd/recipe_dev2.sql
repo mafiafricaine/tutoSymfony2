@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 10 juin 2024 à 09:04
+-- Généré le : jeu. 27 juin 2024 à 08:35
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.2.0
 
@@ -45,7 +45,8 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20240527074752', '2024-05-27 09:49:19', 85),
 ('DoctrineMigrations\\Version20240527094635', '2024-05-27 11:47:22', 142),
 ('DoctrineMigrations\\Version20240530092222', '2024-05-30 11:23:06', 176),
-('DoctrineMigrations\\Version20240603080138', '2024-06-03 10:02:02', 153);
+('DoctrineMigrations\\Version20240603080138', '2024-06-03 10:02:02', 153),
+('DoctrineMigrations\\Version20240624093021', '2024-06-24 11:31:05', 97);
 
 -- --------------------------------------------------------
 
@@ -87,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `recipes` (
   `user_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_A369E2B5A76ED395` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `recipes`
@@ -101,7 +102,9 @@ INSERT INTO `recipes` (`id`, `title`, `slug`, `content`, `created_at`, `updated_
 (25, 'Recette sans image', 'recette-sans-image', 'Tu ne peux pas le faire monsieur', '2024-05-27 10:06:58', '2024-05-27 10:06:58', 5, 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg', 1),
 (26, 'Mikate (beignet)', 'mikate-beignet', 'Comment faire de bon beignets (mikate) pour accompagner votre repas', '2024-05-27 10:43:42', '2024-05-27 10:44:23', 50, 'https://recettes-africaines.fr/wp-content/uploads/2023/01/mikate-768x1024.jpeg', 2),
 (27, 'Tilapia braisé', 'tilapia-braise', 'Comment faire un bon tilapia braisé au makala', '2024-05-27 10:46:03', '2024-05-27 10:46:03', 45, 'https://cookingwithclaudy.com/wp-content/uploads/2023/06/20230624173436_IMG_6060-1024x1536.jpg', 1),
-(29, 'Sushi Au Saumon', 'sushi-au-saumon', 'Tu prends du riz et du saumon.', '2024-06-03 09:45:57', '2024-06-03 09:45:57', 45, 'https://th.bing.com/th/id/OIP.YzNBu-r2yymhRgwhGIZ_rgHaJ4?rs=1&pid=ImgDetMain', 1);
+(29, 'Sushi Au Saumon', 'sushi-au-saumon', 'Tu prends du riz et du saumon.', '2024-06-03 09:45:57', '2024-06-03 09:45:57', 45, 'https://th.bing.com/th/id/OIP.YzNBu-r2yymhRgwhGIZ_rgHaJ4?rs=1&pid=ImgDetMain', 1),
+(30, 'Recette de James Bond', 'recette-de-james-bond', 'Voici la recette de l\'agent 007 le plus connu au monde', '2024-06-24 09:33:40', '2024-06-24 09:39:06', 40, 'https://storage.canalblog.com/14/25/546991/131195803_o.jpg', 1),
+(31, 'Gateau Julien', 'gateau-julien', 'Voici un gâteau bien sucré', '2024-06-24 09:44:12', '2024-06-24 09:44:12', 180, 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhBQrouzig2-j-sT00Vd9d-nXXYW-yCYkQLRPi1p-Rkb3z0NMVCga1u9nlWoo2evzFdNYYwY2HGC2UbFTinrShwJSu_L_fCZOTIOjUljL7oCzFfjUR9OEK-CM9M6vjmb2jmcnEnj0q-tI4/s1600/G%25C3%25A2teau+voiture.JPG', 2);
 
 -- --------------------------------------------------------
 
@@ -119,6 +122,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `lastname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
   `updated_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `is_verified` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -127,10 +131,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `roles`, `password`, `firstname`, `lastname`, `created_at`, `updated_at`) VALUES
-(1, 'jamesbond@cfitech.be', '[]', '$2y$13$7NkWDSYqEejJGeiUNDSCJehmIoM5h5Pg10ahyqKTW.XT3KLwFN49K', 'James', 'Bond', '2024-06-03 09:30:46', '2024-06-03 09:30:46'),
-(2, 'julien@cfitech.be', '[]', '$2y$13$Fz.xemFNS3iKcCYiq6SvxeXu/RRNAkmm8jptmRWYqtWUWRTJUHiwi', 'Julien', 'Dunia', '2024-06-03 09:31:56', '2024-06-03 09:31:56'),
-(3, 'rose@cfitech.be', '[]', '$2y$13$DdzsfqRDia8KJiVA8j3bBeeGuHuolmrU4fK7egxcx4fLQBHBM44hq', 'Rose', 'Cfitech', '2024-06-07 12:22:41', '2024-06-07 12:22:41');
+INSERT INTO `users` (`id`, `email`, `roles`, `password`, `firstname`, `lastname`, `created_at`, `updated_at`, `is_verified`) VALUES
+(1, 'jamesbond@cfitech.be', '[]', '$2y$13$7NkWDSYqEejJGeiUNDSCJehmIoM5h5Pg10ahyqKTW.XT3KLwFN49K', 'James', 'Bond', '2024-06-03 09:30:46', '2024-06-03 09:30:46', 0),
+(2, 'julien@cfitech.be', '[]', '$2y$13$Fz.xemFNS3iKcCYiq6SvxeXu/RRNAkmm8jptmRWYqtWUWRTJUHiwi', 'Julien', 'Dunia', '2024-06-03 09:31:56', '2024-06-03 09:31:56', 0),
+(3, 'rose@cfitech.be', '[]', '$2y$13$DdzsfqRDia8KJiVA8j3bBeeGuHuolmrU4fK7egxcx4fLQBHBM44hq', 'Rose', 'Cfitech', '2024-06-07 12:22:41', '2024-06-07 12:22:41', 0);
 
 --
 -- Contraintes pour les tables déchargées
