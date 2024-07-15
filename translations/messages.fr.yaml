@@ -16,9 +16,26 @@ Updated: 'Modifiée le '
 registerForm.title: Inscription
 registerForm.submit: "S'enregistrer"
 registerForm.titleOnglet: 'Onglet inscription'
-registerForm:
-  firstname: Prénom
-  lastname: Nom
-  email: "Adresse email"
-  agreeTerms: "Accepter les termes"
-Password: "Mot de passe"
+registerForm.firstname: Prénom
+registerForm.lastname: Nom
+registerForm.email: 'Adresse email'
+registerForm.agreeTerms: 'Accepter les termes'
+Password: 'Mot de passe'
+recipeController.emailNotVerified: "Votre adresse email n'est pas verifiée."
+login.title: Connexion
+login.email: 'Adresse email'
+login.password: 'Mot de passe'
+login.forgotPassword: 'Vous avez oublié votre mot de passe ?'
+login.signIn: 'Se connecter'
+login.notRegistered: 'Pas encore de compte ?'
+login.createAccount: Inscrivez-vous
+accountShow.title: 'Mon compte'
+accountShow.profile: 'Mon compte'
+accountShow.accountCreatedAt: 'Date de création du compte'
+accountShow.editAccount: 'Modifier mon compte'
+'Account successfuly updated !': 'Votre compte a bien été mise à jour !'
+accountEdit.title: "Modifier son compte"
+accountEdit.updateProfile: "Mise à jour du compte"
+accountEdit.applyChanges: "Appliquer les changements"
+userForm.firstname: Prénom
+userForm.lastname: Nom
