@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 27 juin 2024 à 08:35
+-- Généré le : jeu. 18 juil. 2024 à 07:11
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.2.0
 
@@ -46,28 +46,9 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20240527094635', '2024-05-27 11:47:22', 142),
 ('DoctrineMigrations\\Version20240530092222', '2024-05-30 11:23:06', 176),
 ('DoctrineMigrations\\Version20240603080138', '2024-06-03 10:02:02', 153),
-('DoctrineMigrations\\Version20240624093021', '2024-06-24 11:31:05', 97);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `messenger_messages`
---
-
-DROP TABLE IF EXISTS `messenger_messages`;
-CREATE TABLE IF NOT EXISTS `messenger_messages` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `body` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `headers` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue_name` varchar(190) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `available_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `delivered_at` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
-  PRIMARY KEY (`id`),
-  KEY `IDX_75EA56E0FB7336F0` (`queue_name`),
-  KEY `IDX_75EA56E0E3BD61CE` (`available_at`),
-  KEY `IDX_75EA56E016BA31DB` (`delivered_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+('DoctrineMigrations\\Version20240624093021', '2024-06-24 11:31:05', 97),
+('DoctrineMigrations\\Version20240708133757', '2024-07-08 15:39:10', 244),
+('DoctrineMigrations\\Version20240715140117', '2024-07-15 16:02:29', 165);
 
 -- --------------------------------------------------------
 
@@ -109,6 +90,35 @@ INSERT INTO `recipes` (`id`, `title`, `slug`, `content`, `created_at`, `updated_
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `reset_password_request`
+--
+
+DROP TABLE IF EXISTS `reset_password_request`;
+CREATE TABLE IF NOT EXISTS `reset_password_request` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `selector` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hashed_token` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `requested_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `expires_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  PRIMARY KEY (`id`),
+  KEY `IDX_7CE748AA76ED395` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `reset_password_request`
+--
+
+INSERT INTO `reset_password_request` (`id`, `user_id`, `selector`, `hashed_token`, `requested_at`, `expires_at`) VALUES
+(1, 3, 'eenMyWXrMhTjMgKqrn2h', 'RMN6wmcO9OrMsu0u9fAWYim6GyP74LrcRK3l6cqjZaQ=', '2024-07-08 15:57:09', '2024-07-08 16:57:09'),
+(2, 2, 'V0qWnVBtWOunltEfKxdV', 'N8ucJnzrscu4NBzLe76Kj6VHway/F2PB8ah1/2kM9pU=', '2024-07-12 08:51:23', '2024-07-12 09:51:23'),
+(3, 1, 'RdS9ymqcwabauGHC0IUM', 'KZLgynsf0+l7hbGhY/LgXggTgZw0PRxzWPzSv30Lt9k=', '2024-07-12 08:53:44', '2024-07-12 09:53:44'),
+(5, 5, 'NllsBWPHzYdIvwfqM2bk', 'ft+jCIu5xIeMoBiaczGC1BfFDycbUizOLINsg2P1pxA=', '2024-07-12 09:03:10', '2024-07-12 10:03:10'),
+(8, 6, 'HqWpsPGi4u1vsk4Iaki1', 'w1uSX2h5nCdw1u5eS6CXEMCAq52M5cLGsvF7mA0CU/c=', '2024-07-12 09:11:17', '2024-07-12 10:11:17');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `users`
 --
 
@@ -123,18 +133,23 @@ CREATE TABLE IF NOT EXISTS `users` (
   `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
   `updated_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
   `is_verified` tinyint(1) NOT NULL,
+  `image_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image_size` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `roles`, `password`, `firstname`, `lastname`, `created_at`, `updated_at`, `is_verified`) VALUES
-(1, 'jamesbond@cfitech.be', '[]', '$2y$13$7NkWDSYqEejJGeiUNDSCJehmIoM5h5Pg10ahyqKTW.XT3KLwFN49K', 'James', 'Bond', '2024-06-03 09:30:46', '2024-06-03 09:30:46', 0),
-(2, 'julien@cfitech.be', '[]', '$2y$13$Fz.xemFNS3iKcCYiq6SvxeXu/RRNAkmm8jptmRWYqtWUWRTJUHiwi', 'Julien', 'Dunia', '2024-06-03 09:31:56', '2024-06-03 09:31:56', 0),
-(3, 'rose@cfitech.be', '[]', '$2y$13$DdzsfqRDia8KJiVA8j3bBeeGuHuolmrU4fK7egxcx4fLQBHBM44hq', 'Rose', 'Cfitech', '2024-06-07 12:22:41', '2024-06-07 12:22:41', 0);
+INSERT INTO `users` (`id`, `email`, `roles`, `password`, `firstname`, `lastname`, `created_at`, `updated_at`, `is_verified`, `image_name`, `image_size`) VALUES
+(1, 'jamesbond@cfitech.be', '[]', '$2y$13$7NkWDSYqEejJGeiUNDSCJehmIoM5h5Pg10ahyqKTW.XT3KLwFN49K', 'James', 'Bond', '2024-06-03 09:30:46', '2024-07-16 10:49:33', 1, 'james-bond-sean-connery-6696341dd8cfd096806380.jpg', 24872),
+(2, 'julien@cfitech.be', '[]', '$2y$13$Fz.xemFNS3iKcCYiq6SvxeXu/RRNAkmm8jptmRWYqtWUWRTJUHiwi', 'Julien', 'Dunia', '2024-06-03 09:31:56', '2024-06-03 09:31:56', 1, 'default.jpg', NULL),
+(3, 'rose@cfitech.be', '[]', '$2y$13$DdzsfqRDia8KJiVA8j3bBeeGuHuolmrU4fK7egxcx4fLQBHBM44hq', 'Rose', 'Cfitech', '2024-06-07 12:22:41', '2024-06-07 12:22:41', 0, 'default.jpg', NULL),
+(4, 'testos@testos.be', '[]', '$2y$13$i5B0U9PTH74I9fGq6RLh4.SiS5dLaD9q44P6R4vbriLvkroX5Rv3i', 'Testos', 'Testos', '2024-06-28 15:23:29', '2024-06-28 15:23:29', 0, 'default.jpg', NULL),
+(5, 'juliendunia@hotmail.com', '[]', '$2y$13$YsWE1W/iYDgZ/qU8sDo/X.zMP4uKG2HrQRDISIv4nvWYCGD4ew4dO', 'Julie', 'Dunia', '2024-07-01 13:42:25', '2024-07-12 11:18:27', 0, 'default.jpg', NULL),
+(12, 'julien9@cfitech.be', '[]', '$2y$13$pfc94BwRqlX53fVn738eiuP8W7PPwCQHbP8/V8EP3m.4U6vT9bzvi', 'Julien', 'Dunia', '2024-07-16 11:41:06', '2024-07-16 11:42:42', 0, 'img-3693-500x500-66964092557a1657104922.jpg', 83149);
 
 --
 -- Contraintes pour les tables déchargées
@@ -145,6 +160,12 @@ INSERT INTO `users` (`id`, `email`, `roles`, `password`, `firstname`, `lastname`
 --
 ALTER TABLE `recipes`
   ADD CONSTRAINT `FK_A369E2B5A76ED395` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Contraintes pour la table `reset_password_request`
+--
+ALTER TABLE `reset_password_request`
+  ADD CONSTRAINT `FK_7CE748AA76ED395` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
