@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Validator\Constraints\Length;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class RecipeType extends AbstractType
 {
@@ -30,12 +31,19 @@ class RecipeType extends AbstractType
             ->add('content',TextareaType::class, [
                 'label' => 'recipeForm.content'
             ])
-            ->add('imageName',TextType::class, [
-                'label' => 'recipeForm.imageName'
-            ])
             ->add('duration',NumberType::class, [
                 'label' => 'recipeForm.duration'
             ])
+            ->add('imageFile', VichImageType::class, [
+                'label' => 'recipeForm.imageFile',
+                'required' => false,
+                'allow_delete' => true,
+                'delete_label' => "Supprimer l'image de profil",
+                'download_uri' => true,
+                'image_uri' => true,
+                'asset_helper' => true,
+                'imagine_pattern' => 'avatar_thumbnail'
+            ]) 
             ->add('save', SubmitType::class, [
                 'label' => 'recipeForm.save'
             ])

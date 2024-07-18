@@ -7,6 +7,7 @@
     <div class="col-md-6 mx-auto text-center">
         <h1 class="text-center my-5">{{ 'accountEdit.updateProfile'|trans }}</h1>
         {# {{ form_errors(monForm) }} #}
+        {# {{ form_start(monForm, {'attr': {'novalidate': 'novalidate'}}) }} #}
         {{ form_start(monForm) }}
         {{ form_row(monForm.firstname) }}
         {{ form_row(monForm.lastname) }}
