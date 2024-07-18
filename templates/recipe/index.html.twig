@@ -13,8 +13,14 @@
                 <div class="card max-w-sm col-4 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 my-8 mr-4" data-type="post">
                     <h2><a href={{ path('app_recipe_show', {id : recipe.id, slug : recipe.slug})}}>{{ recipe.title | u.truncate(20,'...',false)}} </a></h2>
                     <p>
-                    {# <img src = {{ recipe.imageName}} width="250" height="370"> #}
-                     <img width="250" height="370" class="bd-placeholder-img" src={{ vich_uploader_asset(recipe, 'imageFile') }}>
+                    {# ici je crée une condition pour si la personne supprime l'image de la recette, on verra une image par defaut #}
+                        {% if recipe.imageName %}
+                            <img width="250" height="370" class="bd-placeholder-img" src={{ vich_uploader_asset(recipe, 'imageFile') }}>
+                        {% else %}
+                            <img width="250" height="370" class="bd-placeholder-img" src={{ asset('/images/recipes/default.svg') }}>
+                        {% endif %}
+                   
+                    
                     </p>
                     <p>{{ 'Submitted' |trans }} {{ recipe.createdAt | ago }}</p> 
                     <p>{{ 'By' |trans }} {{ recipe.user.firstname ~" "~ recipe.user.lastname }}</p>
