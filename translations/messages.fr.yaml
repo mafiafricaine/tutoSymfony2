@@ -39,3 +39,4 @@ accountEdit.updateProfile: "Mise à jour du compte"
 accountEdit.applyChanges: "Appliquer les changements"
 userForm.firstname: Prénom
 userForm.lastname: Nom
+userForm.imageFile: Image

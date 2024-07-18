@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class UserFormType extends AbstractType
 {
@@ -18,7 +19,17 @@ class UserFormType extends AbstractType
         ])
         ->add('lastname',TextType::class, [
             'label' => 'userForm.lastname'
-        ])  
+        ])
+        ->add('imageFile', VichImageType::class, [
+            'label' => 'userForm.imageFile',
+            'required' => false,
+            'allow_delete' => true,
+            'delete_label' => "Supprimer l'image de profil",
+            'download_uri' => true,
+            'image_uri' => true,
+            'asset_helper' => true,
+            'imagine_pattern' => 'avatar_thumbnail'
+        ]) 
         ;
     }
 
