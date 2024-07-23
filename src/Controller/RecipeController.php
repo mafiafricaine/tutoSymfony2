@@ -8,6 +8,7 @@ use App\Form\RecipeType;
 use DateTimeImmutable;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RecipeController extends AbstractController
 {
     #[Route(path: '/recette', name: 'app_recipe_index')]
-    public function index(Request $request, EntityManagerInterface $em, TranslatorInterface $translator): Response
+    public function index(PaginatorInterface $paginator, Request $request, EntityManagerInterface $em, TranslatorInterface $translator): Response
     {
         if($this->getUser()){
             if (!$this->getUser()->isVerified()){
@@ -28,7 +29,7 @@ class RecipeController extends AbstractController
         //permet de recuperer toutes les recettes en BD
         // $recipes = $repository->findAll();
 
-        $recipes = $em->getRepository(Recipe::class)->findAll();
+        // $recipes = $em->getRepository(Recipe::class)->findAll();
         //permet de recuperer toutes les recettes en dessous d'une durée en BD
         // $recipes = $repository->findRecipeDurationLowerThan(60);
         // dd($recipes);
@@ -67,6 +68,15 @@ class RecipeController extends AbstractController
 
         // $em->remove($recipes[5]);
         // $em->flush();
+
+        //pagination
+        $data = $em->getRepository(Recipe::class)->findAll();
+        $recipes = $paginator->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            3
+        );
+       
         return $this->render('recipe/index.html.twig', [
             'recipes' => $recipes
         ]); 
