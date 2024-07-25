@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Recipe;
 // use App\Entity\User;
 use App\Form\RecipeType;
+use App\Form\SearchType;
+use App\Model\SearchData;
 use DateTimeImmutable;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RecipeController extends AbstractController
 {
     #[Route(path: '/recette', name: 'app_recipe_index')]
-    public function index(PaginatorInterface $paginator, Request $request, EntityManagerInterface $em, TranslatorInterface $translator): Response
+    public function index(PaginatorInterface $paginator, Request $request, EntityManagerInterface $em, TranslatorInterface $translator, RecipeRepository $repo): Response
     {
         if($this->getUser()){
             if (!$this->getUser()->isVerified()){
@@ -76,9 +78,43 @@ class RecipeController extends AbstractController
             $request->query->getInt('page', 1),
             3
         );
+
+        //barre de recherche
+        
+        $search = false;
+        $searchData = new SearchData();
+        $form = $this->createForm(SearchType::class, $searchData);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()){
+            // dd($searchData);
+            $searchData->page = $request->query->getInt('page', 1);
+            $recipes = $paginator->paginate(
+                $repo->findBySearch($searchData),
+                $request->query->get('page', 1),
+                3
+            );
+            
+            // $recipes = $repo->findBySearch($searchData);
+            // dd($recipes);
+
+            // return $this->render('recipe/index.html.twig', [
+            //     'form' => $form->createView(),
+            //     'recipes' => $recipes
+            // ]);
+             
+            $search = true;
+            return $this->render('recipe/index.html.twig', [
+                'form' => $form,
+                'recipes' => $recipes,
+                'search' => $search,
+                'searchData' => $searchData->query,
+            ]);
+        }
        
         return $this->render('recipe/index.html.twig', [
-            'recipes' => $recipes
+            'form' => $form->createView(),
+            'recipes' => $recipes,
+            'search' => $search
         ]); 
     }
 

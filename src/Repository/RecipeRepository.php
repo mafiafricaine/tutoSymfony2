@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Recipe;
+use App\Model\SearchData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -32,6 +33,24 @@ class RecipeRepository extends ServiceEntityRepository
         ->setParameter('duration', $duration)
         ->getQuery()
         ->getResult();
+    }
+
+    //methode permettant de trouver une recette dans la barre de recherche
+    public function findBySearch(SearchData $searchData)
+    {
+        $data = $this->createQueryBuilder('r')
+            ->addOrderBy('r.createdAt', 'DESC');
+        if (!empty($searchData->query)) {
+            $data = $data
+                //recherche que sur le titre
+                ->andWhere('r.title LIKE :query')
+                //Si on veut rajouter aussi la recherche dans le contenu
+                // ->orWhere('r.content LIKE :query')
+                ->setParameter('query', "%{$searchData->query}%");
+        }
+        return $data
+            ->getQuery();
+            // ->getResult();
     }
 
 //    /**
