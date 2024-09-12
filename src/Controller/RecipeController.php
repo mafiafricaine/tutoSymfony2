@@ -86,8 +86,9 @@ class RecipeController extends AbstractController
         $form = $this->createForm(SearchType::class, $searchData);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
-            // dd($searchData);
+            //dd($searchData);
             $searchData->page = $request->query->getInt('page', 1);
+            $nbRecipesFind =  $paginator->paginate($repo->findBySearch($searchData));
             $recipes = $paginator->paginate(
                 $repo->findBySearch($searchData),
                 $request->query->get('page', 1),
@@ -108,6 +109,7 @@ class RecipeController extends AbstractController
                 'recipes' => $recipes,
                 'search' => $search,
                 'searchData' => $searchData->query,
+                'nbRecipesFind' => $nbRecipesFind
             ]);
         }
        
